@@ -1,10 +1,14 @@
 package vn.edu.ifi.main;
 
-import java.time.ZonedDateTime;
+import vn.edu.ifi.javabean.Banque;
 
 public class Launcher {
 	public static void main(String... strings) {
-		System.out.println(ZonedDateTime.now());
+
+		Banque bank = new Banque();
+		//bank.signUp("Yasser", 0f, 5);
+		bank.getAccountList();
+		
 	}
 
 }
