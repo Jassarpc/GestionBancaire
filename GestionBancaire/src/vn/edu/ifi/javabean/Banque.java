@@ -13,32 +13,32 @@ import java.util.Set;
 import vn.edu.ifi.utilities.DateUtilities;
 import vn.edu.ifi.utilities.StorageUtilities;
 
-public class Banque implements java.io.Serializable {
-	/**
-	 * 
-	 */
+/**
+ * Cette class Banque est une implementation d'une banque réelle,
+ * elle implémente l'interface Serializable pour pouvoir être sérialisé.
+ * @author DAOUDA Kadri Saïdi - HAMIDULLAH Yasser
+ * @version 1.0
+ */
+public class Banque implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	private Map<Integer, Compte> accounts;
 	private Map<Integer, Client> clients;
 	private List<Transaction> transactions;
-	// public transient StorageUtilities storageUtilities;
 	private int lastAccountNumber = 10, lastClientId = 900;
-	// ------------------------------------------------------
+	
+	/**
+	 * Le constructeur de notre class Banque
+	 */
 	public Banque() {
 		initialize();
 	}
 
 	/**
-	 * 
-	 * @param storageUtilities
+	 * Initialise banque, teste s'il existe déjà un stockage de données / 
+	 * vide (ne comportant pas des données bancaires) et qu'il 
+	 * faut en créer un nouveau avec les données initiales
 	 */
-	// ----------------------------------------
-
-	
-
-	
-
-	// ----------------------------------------
 	private void initialize() {
 		Banque banque = null;
 		if (StorageUtilities.fileStorageExists() && StorageUtilities.containsBankData()) {
@@ -55,8 +55,11 @@ public class Banque implements java.io.Serializable {
 		}
 	}
 
-	
-
+	/**
+	 * Cette methode est appélée lorsqu'aucun stockage de données 
+	 * de la banque n'a pas été trouvée ou que les données sont corrompus 
+	 * ou ne possedant plus des données bancaires
+	 */
 	private void setUpNewBankAndStorage() {
 		accounts = new HashMap<>();
 		clients = new HashMap<>();
@@ -68,7 +71,10 @@ public class Banque implements java.io.Serializable {
 					"******************[INFO] La banque est initialisé avec les données initiales******************");
 		}
 	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	private Map<Integer, Compte> getAccounts() {
 		return accounts;
 	}
@@ -107,9 +113,8 @@ public class Banque implements java.io.Serializable {
 
 	}
 
-	public boolean deposit(Compte compte, float amount) {
-		Compte c = findAccountByAccNumber(compte.getAccNumber());
-		accounts.put(c.getAccNumber(), c);
+	public boolean deposit(int accNumber, float amount) {
+		Compte compte = findAccountByAccNumber(accNumber);
 		Transaction transaction = new Transaction(TransactionType.DEPOT, DateUtilities.getCurrent(), amount, compte);
 		return startTransaction(transaction);
 	}
@@ -148,15 +153,26 @@ public class Banque implements java.io.Serializable {
 	}
 
 	private boolean startTransaction(Transaction transaction) {
-		this.transactions.add(transaction);
-		if (updateData()) {
-			// we'll return here soon!!
-			System.out.println("[" + DateUtilities.getFormattedDate(transaction.getTransactionDate())
-					+ "]La transaction Numéro de type " + transaction.getTransactionType().toString()
-					+ " compte numero " + transaction.getCompte().getAccNumber() + " a bien été enregistré");
-			return true;
+		transactions.add(transaction);
+		Compte compte = transaction.getCompte();
+		if ((compte.getAccBalance() > transaction.getAmount()
+				&& transaction.getTransactionType() == TransactionType.RETRAIT)
+				|| (transaction.getTransactionType() == TransactionType.DEPOT)) {
+			compte.setAccBalance(compte.getAccBalance() + transaction.getAmount());
+			accounts.put(compte.getAccNumber(), compte);
+			if (updateData()) {
+				// we'll return here soon!!
+				System.out.println("******************[TRANSACTION SUCCEDED] " + transaction.toString()
+				+ " a bien été enregistré");
+				return true;
+			} else {
+				System.out.println(
+						"******************[ERROR] Impossible d'enregistrer cette transaction******************");
+				return false;
+			}
 		} else {
-			System.out.println("La transaction a échoué");
+			System.out.println("******************[TRANSACTION FAILED]" + transaction.toString()
+			+ " : SOLDE INSUFISANT******************");
 			return false;
 		}
 	}
@@ -176,7 +192,8 @@ public class Banque implements java.io.Serializable {
 			if (saveNewAccount(c))
 				updateData();
 		} else {
-			System.out.println("******************[ERROR]User not registered or Bad User Identification******************");
+			System.out.println(
+					"******************[ERROR]User not registered or Bad User Identification******************");
 		}
 
 	}
@@ -203,11 +220,11 @@ public class Banque implements java.io.Serializable {
 	}
 
 	public void getAccountList() {
-		
+
 		accounts.forEach((key, comtpe) -> {
 			System.out.println("Compte N°" + comtpe.getAccNumber() + " de " + comtpe.getUserName()
-					+ " portant le numéro d'identification ID" + comtpe.getClientId() + " solde "
-					+ comtpe.getAccBalance() + "VND " + " avec taux de " + comtpe.getBenefitRate() + "%");
+			+ " portant le numéro d'identification ID" + comtpe.getClientId() + " solde "
+			+ comtpe.getAccBalance() + "VND " + " avec taux de " + comtpe.getBenefitRate() + "%");
 		});
 	}
 
@@ -323,6 +340,7 @@ class Transaction implements Serializable {
 		this.transactionDate = transactionDate;
 		this.amount = amount;
 		this.compte = compte;
+
 	}
 
 	public TransactionType getTransactionType() {
@@ -390,8 +408,8 @@ class Transaction implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Transaction [transactionType=" + transactionType + ", transactionDate=" + transactionDate + ", amount="
-				+ amount + ", compte=" + compte + "]";
+		return "[" + DateUtilities.getFormattedDate(getTransactionDate()) + "] " + getTransactionType().toString()
+				+ " sur le compte numero CP" + getCompte().getAccNumber() + " " + getCompte().getUserName();
 	}
 
 }

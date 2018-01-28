@@ -7,8 +7,9 @@ public class Launcher {
 
 		Banque bank = new Banque();
 		//bank.signUp("Yasser", 0f, 5);
+		bank.deposit(11, 50000);
 		bank.getAccountList();
-		
+		bank.withdraw(11, 500000);
 	}
 
 }
