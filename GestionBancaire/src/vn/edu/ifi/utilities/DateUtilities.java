@@ -17,4 +17,8 @@ public class DateUtilities {
 	public static String getFormattedDate(Date date) {
 		return new SimpleDateFormat("EEEEEEEE dd MMMMMMMM yyyy", Locale.FRENCH).format(date);
 	}
+	public static String getFormattedDateDDMMYYY(Date date) {
+		return new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH).format(date);
+	}
+	
 }
