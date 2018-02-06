@@ -15,7 +15,7 @@ public class Compte implements Serializable {
 	private int accNumber;
 	private float accBalance;
 	private float benefitRate;
-	private float clientId;
+	private int clientId;
 	private String userName;
 	private Map<Integer, Transaction> transactions;
 
@@ -80,11 +80,11 @@ public class Compte implements Serializable {
 		setAccBalance(accBalance + (((accBalance) * benefitRate) / 100));
 	}
 
-	public float getClientId() {
+	public int getClientId() {
 		return clientId;
 	}
 
-	public void setClientId(float clientId) {
+	public void setClientId(int clientId) {
 		this.clientId = clientId;
 	}
 

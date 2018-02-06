@@ -17,11 +17,12 @@ public class Client implements Serializable {
 
 	public Client(String userName, int clientId) {
 		try {
-			if(clientId<=0)
+			if(clientId>0)
 			{
 		this.userName = userName;
 		this.clientId = clientId;
-		accounts = new HashMap<>();}else {
+		accounts = new HashMap<>();
+			}else {
 			throw new IdException("L'identifiant ne peut pas être négatif ou zéro");
 		}
 			}catch (IdException e) {
