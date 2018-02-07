@@ -1,6 +1,6 @@
 package vn.edu.ifi.exception;
 
-public class IdException extends Exception {
+public class InvalidIdException extends Exception {
 
 	
 	/**
@@ -8,7 +8,7 @@ public class IdException extends Exception {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public IdException(String message) {
+	public InvalidIdException(String message) {
 		super(message);
 	}
 

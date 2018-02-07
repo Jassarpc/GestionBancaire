@@ -3,7 +3,9 @@
  */
 package vn.edu.ifi.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,7 +19,7 @@ import vn.edu.ifi.javabean.Banque;
  * @author yasse
  *
  */
-public class DepositTest {
+public class BanqueTest {
 
 	/**
 	 * @throws java.lang.Exception
@@ -52,9 +54,30 @@ public class DepositTest {
 	 */
 	@Test
 	public void testDeposit() {
+		
 		Banque banque = new Banque();
-		boolean succes = banque.deposit(-1, 500000f);
-		assertEquals(false,succes);
+		boolean success = banque.deposit(11, 500000);
+		assertEquals(true, success);
+	}
+
+	/**
+	 * Test method for {@link vn.edu.ifi.javabean.Banque#withdraw(int, float)}.
+	 */
+	@Test
+	public void testWithdraw() {
+		Banque banque = new Banque();
+		boolean success = banque.withdraw(11, 50000);
+		assertEquals(true, success);
+	}
+
+	/**
+	 * Test method for {@link vn.edu.ifi.javabean.Banque#signUp(java.lang.String, float)}.
+	 */
+	@Test
+	public void testSignUpStringFloat() {
+		Banque banque = new Banque();
+		int value = banque.signUp("Yasser", 5);
+		assertNotEquals(0,value);
 	}
 
 }

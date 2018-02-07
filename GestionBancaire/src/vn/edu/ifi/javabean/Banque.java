@@ -160,28 +160,33 @@ public class Banque implements Serializable {
 		}
 	}
 
-	public void signUp(String userName, float benefitRate) {
+	public int signUp(String userName, float benefitRate) {
+		int id = 0;
 		Client client = new Client(userName, getNewClientId());
-		Compte compte = new Compte(getNewAccountNumber(), 0f, benefitRate, client.getClientId(),client.getUserName());
+		Compte compte = new Compte(getNewAccountNumber(), 0f, benefitRate, client.getClientId());
 		client.getAccounts().put(compte.getAccNumber(), compte);
 		clients.put(client.getClientId(), client);
 		updateData();
 		System.out.println("Inscription réussi => " + compte.toString());
+		id = getLastAccountNumber();
+		return id;
 	}
 
-	public void signUp(int clientId, float benefitRate) {
+	public int signUp(int clientId, float benefitRate) {
+		int id = 0;
 		Client client = clients.get(clientId);
 		if (client != null) {
-			Compte c = new Compte(getNewAccountNumber(), 0f, benefitRate, client.getClientId(),client.getUserName());
+			Compte c = new Compte(getNewAccountNumber(), 0f, benefitRate, client.getClientId());
 			client.addAccount(c);
 			clients.put(client.getClientId(), client);
 			updateData();
+			id=getLastAccountNumber();
 			System.out.println("Inscription réussi => " + c.toString());
 		} else {
 			System.err.println(
 					"******************[ERROR]User not registered or Bad User Identification******************");
 		}
-
+		return id;
 	}
 
 	private boolean updateData() {
@@ -228,6 +233,8 @@ public class Banque implements Serializable {
 		});
 
 	}
+	
+	
 	public void printAccountList() {
 		String leftAlignFormat = "| %-10d | %-10d | %-10s | %-11s| %-10s |%n";
 
@@ -238,7 +245,7 @@ public class Banque implements Serializable {
 		clients.forEach((clKey, client) -> {
 			client.getAccounts().forEach((key, compte) -> {
 
-				System.out.format(leftAlignFormat, compte.getAccNumber(),compte.getClientId(),""+compte.getBenefitRate(),compte.getUserName(),""+compte.getAccBalance());
+				System.out.format(leftAlignFormat, compte.getAccNumber(),compte.getClientId(),""+compte.getBenefitRate(),client.getUserName(),""+compte.getAccBalance());
 				System.out.format("+------------+------------+------------+------------+------------+%n");
 
 			});

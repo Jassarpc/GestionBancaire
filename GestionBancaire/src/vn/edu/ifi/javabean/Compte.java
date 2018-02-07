@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import vn.edu.ifi.exception.BenefitRateException;
-import vn.edu.ifi.exception.IdException;
+import vn.edu.ifi.exception.InvalidIdException;
 
 public class Compte implements Serializable {
 	/**
@@ -16,13 +16,12 @@ public class Compte implements Serializable {
 	private float accBalance;
 	private float benefitRate;
 	private int clientId;
-	private String userName;
 	private Map<Integer, Transaction> transactions;
 
-	public Compte(int accNumber, float accBalance, float benefitRate, int clientId, String userName) {
+	public Compte(int accNumber, float accBalance, float benefitRate, int clientId) {
 		try {
 			if (clientId <= 0 || accNumber <= 0) {
-				throw new IdException("L'identifiant ne peut pas être négatif ou zéro");
+				throw new InvalidIdException("L'identifiant ne peut pas être négatif ou zéro");
 			}
 			if (benefitRate < 0 || benefitRate > 100) {
 				throw new BenefitRateException("Impossible de donner une % négative ou <100");
@@ -30,11 +29,10 @@ public class Compte implements Serializable {
 				this.accNumber = accNumber;
 				this.accBalance = accBalance;
 				this.benefitRate = benefitRate;
-				this.userName = userName;
 				this.clientId = clientId;
 				transactions = new HashMap<>();
 			}
-		} catch (BenefitRateException | IdException e) {
+		} catch (BenefitRateException | InvalidIdException e) {
 			// TODO Auto-generated catch block
 			System.err.println(e.getMessage());
 		}
@@ -87,19 +85,30 @@ public class Compte implements Serializable {
 	public void setClientId(int clientId) {
 		this.clientId = clientId;
 	}
-
-	public String getUserName() {
-		return userName;
+	
+	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return super.clone();
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object arg0) {
+		// TODO Auto-generated method stub
+		return super.equals(arg0);
 	}
 
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return "[Compte N°" + getAccNumber() + "]" + getUserName().toUpperCase() + " ClientId : " + getClientId()
+		return "[Compte N°" + getAccNumber() + "] ClientId : " + getClientId()
 				+ " Solde : " + accBalance;
 	}
 

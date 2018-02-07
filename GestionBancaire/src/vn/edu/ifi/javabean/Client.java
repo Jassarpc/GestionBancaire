@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import vn.edu.ifi.exception.IdException;
+import vn.edu.ifi.exception.InvalidIdException;
 
 public class Client implements Serializable {
 	/**
@@ -23,9 +23,9 @@ public class Client implements Serializable {
 		this.clientId = clientId;
 		accounts = new HashMap<>();
 			}else {
-			throw new IdException("L'identifiant ne peut pas être négatif ou zéro");
+			throw new InvalidIdException("L'identifiant ne peut pas être négatif ou zéro");
 		}
-			}catch (IdException e) {
+			}catch (InvalidIdException e) {
 			System.err.println(e.getMessage());
 		}
 	}
