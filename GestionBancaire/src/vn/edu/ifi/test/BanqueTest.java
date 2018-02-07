@@ -5,7 +5,6 @@ package vn.edu.ifi.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.AfterClass;
