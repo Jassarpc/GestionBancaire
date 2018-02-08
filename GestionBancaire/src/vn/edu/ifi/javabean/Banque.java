@@ -65,57 +65,94 @@ public class Banque implements Serializable {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * getter de la liste des clients
+	 * @return clients
 	 */
 	public Map<Integer, Client> getClients() {
 		return clients;
 	}
-
+	/**
+	 * setter de la liste des clients
+	 * @param clients
+	 */
 	public void setClients(Map<Integer, Client> clients) {
 		this.clients = clients;
 	}
-
+	/**
+	 * Méthode appelé lors du dépôt
+	 * @param accNumber
+	 * @param amount
+	 * @return resultat
+	 */
 	public boolean deposit(int accNumber, float amount) {
 		Transaction transaction = new Transaction(TransactionType.DEPOT, DateUtilities.getCurrent(), amount, accNumber);
 		return startTransaction(transaction);
 	}
-
+	/**
+	 * Méthode appelé lors du retrait
+	 * @param accNumber
+	 * @param amount
+	 * @return
+	 */
 	public boolean withdraw(int accNumber, float amount) {
 		Transaction transaction = new Transaction(TransactionType.RETRAIT, DateUtilities.getCurrent(), amount,accNumber);
 		return startTransaction(transaction);
 	}
-
+	/**
+	 * Getter
+	 * @return dernier Numero de Compte
+	 */
 	public int getLastAccountNumber() {
 		return lastAccountNumber;
 	}
-
+	/**
+	 * Getter
+	 * @return nouveau numéro de compte disponible
+	 */
 	public int getNewAccountNumber() {
 		lastAccountNumber++;
 		return lastAccountNumber;
 	}
-
+	/**
+	 * Setter
+	 * @param lastAccountNumber
+	 */
 	public void setLastAccountNumber(int lastAccountNumber) {
 		this.lastAccountNumber = lastAccountNumber;
 	}
-
+	/**
+	 * Getter
+	 * @return lastTransactionId
+	 */
 	public int getLastTransactionId() {
 		return lastTransactionId;
 	}
-
+	/**
+	 * Setter
+	 * @param lastTransactionId
+	 */
 	public void setLastTransactionId(int lastTransactionId) {
 		this.lastTransactionId = lastTransactionId;
 	}
-
+	/**
+	 * Getter
+	 * @return nouveau TransactionId disponible
+	 */
 	public int getNewIdTransaction() {
 		lastTransactionId++;
 		return lastTransactionId;
 	}
-
+	/**
+	 * Getter
+	 * @return lastClientId
+	 */
 	public int getLastClientId() {
 		return lastClientId;
 	}
-
+	/**
+	 * Getter
+	 * @return nouveau id client disponible
+	 */
 	public int getNewClientId() {
 		lastClientId++;
 		return lastClientId;
@@ -159,7 +196,12 @@ public class Banque implements Serializable {
 	return false;
 		}
 	}
-
+	/**
+	 * Methode pour faire l'inscription d'un nouveau client
+	 * @param userName
+	 * @param benefitRate
+	 * @return numero de compte créé dernièrement
+	 */
 	public int signUp(String userName, float benefitRate) {
 		int id = 0;
 		Client client = new Client(userName, getNewClientId());
@@ -171,7 +213,12 @@ public class Banque implements Serializable {
 		id = getLastAccountNumber();
 		return id;
 	}
-
+	/**
+	 * Methode pour faire l'inscription d'un ancien client
+	 * @param clientId
+	 * @param benefitRate
+	 * @return
+	 */
 	public int signUp(int clientId, float benefitRate) {
 		int id = 0;
 		Client client = clients.get(clientId);
@@ -188,11 +235,18 @@ public class Banque implements Serializable {
 		}
 		return id;
 	}
-
+	/**
+	 * Mise à jour des données
+	 * @return succes de l'opération
+	 */
 	private boolean updateData() {
 		return StorageUtilities.saveData(this);
 	}
-
+	/**
+	 * Recherche d'un compte par numéro de compte
+	 * @param accNumber
+	 * @return
+	 */
 	public Compte findAccountByAccNumber(int accNumber) {
 		Compte compte = null;
 		Set<Entry<Integer, Client>> setHm = clients.entrySet();
@@ -211,11 +265,17 @@ public class Banque implements Serializable {
 	}
 
 
-
+	/**
+	 * Recherche d'un client
+	 * @param clientId
+	 * @return
+	 */
 	public Client findClient(int clientId) {
 		return clients.get(clientId);
 	}
-
+	/**
+	 * Affichage de rapport
+	 */
 	public void printReport() {
 		String leftAlignFormat = "| %-10d | %-10d | %-10s |%n";
 
@@ -234,7 +294,9 @@ public class Banque implements Serializable {
 
 	}
 	
-	
+	/**
+	 * Affichage de la liste des comptes
+	 */
 	public void printAccountList() {
 		String leftAlignFormat = "| %-10d | %-10d | %-10s | %-11s| %-10s |%n";
 
@@ -251,7 +313,9 @@ public class Banque implements Serializable {
 			});
 		});
 	}
-
+	/**
+	 * Methode qui calcule les intérêts et mets à jour les soldes
+	 */
 	public void benefitCalcAndMaj() {
 		clients.forEach((key,value)->{
 			value.benefitCalcAndMaj();
